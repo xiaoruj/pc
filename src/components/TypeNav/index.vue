@@ -14,9 +14,10 @@
       </nav>
       <div class="sort">
         <div class="all-sort-list2">
-          <div class="item" v-for="c1 in categoryList" :key="cl.categoryId">
+          
+          <div class="item" v-for="c1 in categoryList" :key="c1.categoryId">
             <h3>
-              <a href="">{c1.categoryName}</a>
+              <a href="">{{c1.categoryName}}</a>
             </h3>
             <div class="item-list clearfix">
               <div class="subitem">
@@ -40,16 +41,15 @@
 </template>
 
 <script>
-  import {
-    mapState
-  } from 'vuex'
+  import { mapState} from 'vuex'
+  
   export default {
     name: 'TypeNav',
 
     computed: {
-      /* baseCategoryList () {
-        return this.$store.state.home.baseCategoryList
-      } */
+      //  baseCategoryList () {
+      //   return this.$store.state.home.baseCategoryList
+      // } 
 
       /* 
       ...mapState(['baseCategoryList']),
@@ -84,11 +84,11 @@
     //     return this.$store.state.home.baseCategoryList
     //   } 
 
-      // ...mapState({
+      ...mapState({
       //   // 计算属性值由vuex内部调用此回调函数(传入总state)得到返回值作为属性值
       //   // state: store的总状态
-      //   categoryList: state => state.home.baseCategoryList
-      // })
+         categoryList: state => state.home.baseCategoryList
+       })
     },
 
     mounted() {
