@@ -10,6 +10,7 @@
   "dependencies": {
     "axios": "^0.19.2",
     "core-js": "^3.6.4",
+    "lodash": "4.17.15",
     "mockjs": "^1.1.0",
     "nprogress": "^0.2.0",
     "vue": "^2.6.11",
@@ -23,6 +24,7 @@
     "babel-eslint": "^10.1.0",
     "eslint": "^6.7.2",
     "eslint-plugin-vue": "^6.2.2",
+    "less": "^3.11.1",
     "less-loader": "^6.0.0",
     "vue-template-compiler": "^2.6.11"
   },
@@ -46,17 +48,5 @@
     "> 1%",
     "last 2 versions",
     "not dead"
-  ],
-  "description": "",
-  "main": "babel.config.js",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/zxfjd3g/191227_gshop-client.git"
-  },
-  "author": "",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/zxfjd3g/191227_gshop-client/issues"
-  },
-  "homepage": "https://github.com/zxfjd3g/191227_gshop-client#readme"
+  ]
 }

@@ -1,4 +1,5 @@
 import ajax from './ajax'
+import mockAjax from './mockAjax'
 export function reqBaseCategoryList() {
   // return ajax('/product/getBaseCategoryList')
   return ajax({
@@ -17,3 +18,5 @@ export function reqLogin (mobile, password) {
 
   // return ajax.post('/user/passport/login', {mobile, password})
 }
+export const reqBanners = () => mockAjax('/banners')
+export const reqFloors = () => mockAjax('/floors')

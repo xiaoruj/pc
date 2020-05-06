@@ -1,9 +1,11 @@
 <template>
   <div>
+    <TypeNav/>
     <h2>params参数: keyword={{$route.params.keyword}}</h2>
-    <h2>query参数: keyword2={{$route.query.keyword2}}</h2>
-    <h2>params参数 => props: keyword3={{keyword3}}</h2>
-    <h2>query参数 => props: keyword4={{keyword4}}</h2>
+    <h2>query参数: categoryName={{$route.query.categoryName}}</h2>
+    <h2>query参数: category1Id={{$route.query.category1Id}}</h2>
+    <h2>query参数: category2Id={{$route.query.category2Id}}</h2>
+    <h2>query参数: category3Id={{$route.query.category3Id}}</h2>
 
   </div>
 </template>
