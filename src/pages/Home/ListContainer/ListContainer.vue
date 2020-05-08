@@ -3,24 +3,12 @@
     <div class="sortList clearfix">
       <div class="center">
         <!--banner轮播-->
-        <div class="swiper-container" id="mySwiper">
-          <div class="swiper-wrapper">
-            <div class="swiper-slide">
-              <img src="./images/banner1.jpg" />
-            </div>
-          </div>
-          <!-- 如果需要分页器 -->
-          <div class="swiper-pagination"></div>
-
-          <!-- 如果需要导航按钮 -->
-          <div class="swiper-button-prev"></div>
-          <div class="swiper-button-next"></div>
-        </div>
+        <Carousel :carouselList="banners"/>
       </div>
       <div class="right">
         <div class="news">
           <h4>
-            <em class="fl">尚品汇快报</em>
+            <em class="fl" ref="msg" @click="updateMsg">{{msg}}</em>
             <span class="fr tip">更多 ></span>
           </h4>
           <div class="clearix"></div>
@@ -101,8 +89,40 @@
 </template>
 
 <script>
+  import { mapState } from 'vuex'
+  // import Swiper from 'swiper'
+  // import 'swiper/css/swiper.min.css'
+ 
   export default {
-    name: '',
+    name: 'ListContainer',
+    data(){
+      return {
+        msg: 'atguigu'
+      }
+    },
+    computed: {
+      ...mapState({
+        banners: state => state.home.banners
+      })
+    },
+    watch:{
+      msg(){
+        console.log('watch msg', this.$refs.msg.innerHTML);
+        
+      }
+    },
+    mounted() {
+      // setTimeout(() => {
+      //   this.initSwiper()
+      // },1000)
+    },
+    methods:{
+      updateMsg(){
+        this.msg = 'taobao'
+        console.log('updateMsg', this.$refs.msg.innerHTML);
+        
+      },
+    }
   }
 </script>
 
@@ -177,7 +197,7 @@
             width: 25%;
 
             .list-item {
-              background-image: url(./images/icons.png);
+              background-image: url(../images/icons.png);
               width: 61px;
               height: 40px;
               display: block;

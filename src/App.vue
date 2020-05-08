@@ -24,8 +24,11 @@ export default {
     // console.log('result', result)
     // const result2 = await reqLogin('13700000000', '111111')
     // console.log('result2', result2)
-    const result = await reqFloors()
-    console.log('mock result ', result);
+    // const result = await reqFloors()
+    // console.log('mock result ', result);
+
+    // this.$store.dispatch('getFloors')
+    // this.$store.dispatch('getBanners')
     
     // console.log(this.$store.state)
     // 测试通过异步action获取异步获取数据到vuex的state中
