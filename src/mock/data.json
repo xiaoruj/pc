@@ -1,32 +1,43 @@
 [
 
-    {
-      "id": 1,
-      "username": "tom",
-      "age": 12,
-      "address": {
-    
-      },
-      "likes": []
+  {
+    "id": 1,
+    "username": "tom",
+    "age": 12,
+    "address": {
+
     },
-  
-    {
-      "id": 2,
-      "username": "tom",
-      "age": 12,
-      "address": {
-    
-      },
-      "likes": []
+    "likes": []
+  },
+
+  {
+    "id": 2,
+    "username": "tom",
+    "age": 12,
+    "address": {
+
     },
-  
-    {
-      "id": 3,
-      "username": "tom",
-      "age": 12,
-      "address": {
-    
-      },
-      "likes": []
-    }
-  ]
+    "likes": []
+  },
+
+  {
+    "id": 3,
+    "username": "tom",
+    "age": 12,
+    "address": {
+
+    },
+    "likes": []
+  }
+]
+
+{
+  "category3Id": "61",
+  "categoryName": "手机",
+  "keyword": "小米",
+  "order": "1:desc",
+  "pageNo": 1,
+  "pageSize": 10,
+  "props": ["1:3000-4000:价格", "2:6.55-6.64英寸:屏幕尺寸"],
+  "trademark": "4:小米"
+}

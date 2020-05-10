@@ -21,7 +21,7 @@
               <img :src="floor.imgUrl" />
             </div>
             <div class="floorBanner">
-              <Carousel :carouselList="floor.carouselList"/>
+              <Carousel :carouselList="floor.carouselList" :autoplay="false"/>
             </div>
             <div class="split">
               <span class="floor-x-line"></span>
@@ -42,7 +42,7 @@
               </div>
 
               <div class="floor-conver-pit">
-                <img :src="floor.recommendList[3]" />
+                <img :src="floor.recommendList[4]" />
               </div>
             </div>
           </div>

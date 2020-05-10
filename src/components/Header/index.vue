@@ -9,8 +9,8 @@
             <span>请</span>
             <router-link to="/login">登录</router-link>
             <router-link to="/register" class="register">免费注册</router-link>
-            <a href="###">登录</a>
-            <a href="###" class="register">免费注册</a>
+            <!-- <a href="###">登录</a>
+            <a href="###" class="register">免费注册</a> -->
           </p>
         </div>
         <div class="typeList">
@@ -33,17 +33,17 @@
         </router-link>
       </h1>
       <div class="searchArea">
-        <form action="###" class="searchForm">
+        <form action="/xxx" class="searchForm">
           <input
             type="text"
             id="autocomplete"
             class="input-error input-xxlarge"
+            placeholder="关键字"
             v-model="keyword"
           />
           <button
             class="sui-btn btn-xlarge btn-danger"
-            type="button"
-            @click="search"
+            @click.prevent="search"
           >
             搜索
           </button>
@@ -59,7 +59,12 @@ export default {
   data() {
     return {
       keyword: "atguigu",
-    };
+    }
+  },
+  mounted(){
+    this.$bus.$on('removeKeyword', () => {
+      this.keyword = ''
+    })
   },
   methods: {
     search() {
@@ -67,6 +72,19 @@ export default {
       // this.$router.push(`/search/${this.keyword}?keyword2=${this.keyword.toUpperCase()}`);
       // 对象模式
       const keyword = this.keyword;
+      const location = {
+        name: 'search',
+      }
+      if(keyword){
+        location.params = {keyword}
+      }
+      const {query} = this.$route
+      location.query = query
+      if (this.$route.path.indexOf('/search') === 0) {
+        this.$router.replace(location)
+      } else {
+          this.$router.push(location)
+      }
       // if (keyword===''){
       //   this.$router.push('/search')
       // }else{
@@ -92,11 +110,11 @@ export default {
       //   query: { keyword2: keyword.toUpperCase() },
       // });
 
-      this.$router.replace({ // push是重写后的方法
-        name: 'search',
-        params: { keyword: keyword==='' ? undefined : keyword },
-        query: { keyword2: keyword.toUpperCase() }
-      }).then(() => {console.log('跳转成功')})
+      // this.$router.replace({ // push是重写后的方法
+      //   name: 'search',
+      //   params: { keyword: keyword==='' ? undefined : keyword },
+      //   query: { keyword2: keyword.toUpperCase() }
+      // }).then(() => {console.log('跳转成功')})
       
     },
   },
