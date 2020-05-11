@@ -37,4 +37,7 @@ VueRouter.prototype.replace = function(location, onComplete, onAbort) {
 export default new VueRouter({
   mode: "history",
   routes,
+  scrollBehavior(to, from, savedPosition){
+    return {x: 0, y: 0 }
+  }
 });
