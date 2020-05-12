@@ -25,3 +25,5 @@ export const reqProductList = (searchParams) => ajax ({
   method: 'POST',
   data: searchParams
 })
+export const reqProduct = (skuId) => ajax(`/item/${skuId}`)
+export const reqAddToCart = (skuId, skuNum) => ajax.post(`/cart/addToCart/${skuId}/${skuNum}`)

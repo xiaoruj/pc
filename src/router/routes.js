@@ -4,8 +4,6 @@
 import Home from '@/pages/Home'
 import Search from '@/pages/Search'
 import Detail from '@/pages/Detail'
-
-
 import Register from '@/pages/Register'
 import Login from '@/pages/Login'
 
@@ -23,7 +21,7 @@ export default [
   },
   {
     name: 'detail',  // 是当前路由的标识名称
-    path: '/detail/:id',
+    path: '/detail/:skuId',
     component: Detail,
   },
 

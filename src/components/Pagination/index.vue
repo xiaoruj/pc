@@ -84,6 +84,7 @@
 
     methods: {
       setCurrentPage (currentPage) {
+        if(currentPage===this.myCurrentPage) return
         this.myCurrentPage = currentPage
         this.$emit('currentChange', currentPage)
       }
