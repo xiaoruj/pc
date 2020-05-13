@@ -3,7 +3,7 @@ import axios from 'axios'
 // import NProgress from 'nprogress/nprogress'
 import NProgress from 'nprogress' 
 import 'nprogress/nprogress.css' 
-
+import store from '@/store'
 NProgress.configure({ showSpinner: false }) 
 
 const instance = axios.create({
@@ -15,7 +15,7 @@ const instance = axios.create({
 instance.interceptors.request.use(config => {
   // console.log('请求拦截器执行')
   NProgress.start()
-
+  config.headers['userTempId'] = store.state.user.userTempId
   return config
 })
 

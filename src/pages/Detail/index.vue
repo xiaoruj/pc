@@ -353,54 +353,63 @@ export default {
       skuNum: 1,
     }
   },
-  computed:{
+  computed: {
     ...mapState({
       detailInfo: state => state.detail.detailInfo
     }),
     ...mapGetters(['categoryView', 'skuInfo', 'skuImageList', 'spuSaleAttrList'])
   },
-  mounted(){
-    this.$store.dispatch('getDetailInfo', this.$route.params.skuId)
+  mounted () {
+      this.$store.dispatch('getDetailInfo', this.$route.params.skuId)
   },
-  methods:{
-    async addToCart(){
-      const skuId = this.$route.params.skuId
-      const skuNum = this.skuNum
-      // 方法1利用回调函数数据 
-      // this.$store.dispatch('addToCart', {skuId, skuNum, callback: this.callback})
-      // alert('...')
-      // 方法2利用dispatch()的promise返回值
-      // const errorMsg = await this.$store.dispatch('addToCart2',{})
-      // if(errorMsg){
-      //   alert(errorMsg)
-      // }else{
-      //   alert('添加成功，准备跳转到成功界面')
-      // }
-      // 方法2
-      try{
-        await this.$store.dispatch('addToCart3', {skuId, skuNum})
-        alert('添加成功，准备跳转到成功界面')
-      }catch(error){
-        alert(error.message)
-      }
-    },
-    callback(errorMsg){
-      if(errorMsg){
-        alert(errorMsg)
-      }else{
-        alert('添加成功，准备跳转到成功界面')
-      }
-    },
+  methods: {
+      async addToCart () {
+        const skuId = this.$route.params.skuId
+        const skuNum = this.skuNum
+        /* 方式1: 利用回调函数数据 */
+        // this.$store.dispatch('addToCart', {skuId, skuNum, callback: this.callback})
+        // alert('---')
 
-    handleCurrentChange(index){
-      this.currentIndex = index
-    },
-    selectValue (value,valueList){
-      if(value.isChecked!=='1'){
-        valueList.forEach(v => v.isChecked = '0')
-        value.isChecked = '1'
-      }
-    },
+        /* 方式2: 利用dispatch()的promise返回值 */
+        /* const errorMsg = await this.$store.dispatch('addToCart2', {})
+          if (errorMsg) { // 如果有值, 说明添加失败了
+            alert(errorMsg)
+          } else {
+            alert('添加成功, 准备自动跳转到成功的界面')
+          }
+        */
+        try {
+          await this.$store.dispatch('addToCart3', {skuId, skuNum})
+          window.sessionStorage.setItem('SKU_INFO_KEY', JSON.stringify(this.skuInfo))
+          // window.localStorage.setItem('SKU_INFO_KEY', JSON.stringify(this.skuInfo))
+
+          this.$router.push({
+            path: '/addcartsuccess',
+            query: {skuNum}
+          })
+        } catch (error) {
+          alert(error.message)
+        }
+        
+      },
+
+      callback (errorMsg) {
+        if (errorMsg) { 
+          alert(errorMsg)
+        } else {
+          alert('添加成功, 准备自动跳转到成功的界面')
+        }
+      },
+
+      handleCurrentChange (index) {
+        this.currentIndex = index
+      },
+      selectValue (value, valueList) {
+        if (value.isChecked!=='1') {
+          valueList.forEach(v => v.isChecked = '0')
+          value.isChecked = '1'
+        }
+      },
   },
   components:{
       ImageList,
