@@ -1,4 +1,4 @@
-import {reqCartLit, reqCheckCartItem, reqAddToCart} from '@/api'
+import {reqCartList, reqCheckCartItem, reqAddToCart, reqDeleteCartItem} from '@/api'
 
 export default  {
   state: {
@@ -13,7 +13,7 @@ export default  {
 
   actions: {
     async getCartList ({commit}) {
-      const result = await reqCartLit()
+      const result = await reqCartList()
       if (result.code===200) {
         const cartList = result.data
         commit('RECEIVE_CART_LIST', {cartList})
@@ -70,6 +70,21 @@ export default  {
         // console.log('添加到购物车失败')
         throw new Error('添加到购物车失败') 
       }
+    },
+    async deleteCartItem (context, skuId){
+      const result = await reqDeleteCartItem(skuId)
+      if(result.code!==200){
+        throw new Error('删除购物项失败')
+      }
+    },
+    async deleteCheckedCartItems ({state, dispatch}){
+      const promises = state.cartList.reduce((pre, item) =>{
+        if(item.isChecked===1){
+          pre.push(dispatch('deleteCartItem', item.skuId))
+        }
+        return pre
+      }, [])
+      return Promise.all(promises)
     }
   },
   getters: {

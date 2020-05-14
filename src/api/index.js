@@ -44,13 +44,14 @@ reqProductList({
 export const reqProduct = (skuId) => ajax(`/item/${skuId}`) 
 
 export const reqAddToCart = (skuId, skuNumChange) => ajax.post(`/cart/addToCart/${skuId}/${skuNumChange}`)
-export const reqCartLit = () => ajax('/cart/cartList')
+export const reqCartList = () => ajax('/cart/cartList')
 // reqCartLit()
 export const reqCheckCartItem = (skuId, isChecked) => ajax(`/cart/checkCart/${skuId}/${isChecked}`)
-export const reqDeleteCartItem = () => ajax.delete(`/cart/deleteCart/${skuId}`)
+export const reqDeleteCartItem = (skuId) => ajax.delete(`/cart/deleteCart/${skuId}`)
 /* export const reqDeleteCartItem = () => ajax({
   url: `/cart/deleteCart/${skuId}`,
   method: 'DELETE'
 }) */
-
+export const reqRegister = (userInfo) => ajax.post('/user/passport/register', userInfo)
+export const reqLogout = () => ajax('/user/passport/logout')
 

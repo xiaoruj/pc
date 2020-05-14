@@ -31,14 +31,14 @@
                 change事件: 在失去焦点时才触发
              -->
             <input autocomplete="off" type="text" class="itxt" :value="item.skuNum" 
-              @change="changeItemNum(item, $event.target.value*1 - item.skuNum)">
+              @change="changeItemNum(item, $event.target.value*1 - item.skuNum, $event)">
             <a href="javascript:void(0)" class="plus" @click="changeItemNum(item, 1)">+</a>
           </li>
           <li class="cart-list-con6">
             <span class="sum">{{item.cartPrice * item.skuNum}}</span>
           </li>
           <li class="cart-list-con7">
-            <a href="#none" class="sindelet">删除</a>
+            <a href="javascript:" class="sindelet" @click="deleteCartItem(item)">删除</a>
             <br>
             <a href="#none">移到收藏</a>
           </li>
@@ -55,7 +55,7 @@
         <span>全选</span>
       </div>
       <div class="option">
-        <a href="#none">删除选中的商品</a>
+        <a href="javascript:" @click="deleteCheckedCartItems">删除选中的商品</a>
         <a href="#none">移到我的关注</a>
         <a href="#none">清除下柜商品</a>
       </div>
@@ -97,7 +97,7 @@
           // return this.cartList.find(item => item.isChecked!==1)===undefined
           // return !this.cartList.find(item => item.isChecked!==1)
           // return !this.cartList.some(item => item.isChecked===0)  // 是否有一个元素满足条件
-          return this.cartList.every(item => item.isChecked===1)  // 是否所有元素都满足条件
+          return this.cartList.every(item => item.isChecked===1) && this.cartList>0 // 是否所有元素都满足条件
         },
         async set (value) { 
           try {
@@ -132,6 +132,26 @@
           this.$store.dispatch('getCartList')
         } catch (error) { 
           alert(error.message)
+        }
+      },
+      async deleteCartItem (item){
+        if(window.confirm(`确定删除${item.skuName}吗?`)){
+          try{
+            await this.$store.dispatch('deleteCartItem', item.skuId)
+            this.$store.dispatch('getCartList')
+          }catch(error){
+            alert(error.message)
+          }
+        }
+      },
+      async deleteCheckedCartItems(){
+        if(window.confirm(`确定删除吗?`)){
+          try{
+            await this.$store.dispatch('deleteCheckedCartItems')
+            this.$store.dispatch('getCartList')
+          }catch(error){
+            alert(error.message)
+          }
         }
       }
     }

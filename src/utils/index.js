@@ -7,4 +7,10 @@ export function getUserTempId(){
     }
     return userTempId
 }
+export function saveUserInfo (userInfo){
+    localStorage.setItem('USER_INFO_KEY', JSON.stringify(userInfo))   
+}
+export function getUserInfo (){
+    return JSON.parse(localStorage.getItem('USER_INFO_KEY')) || {}
+}
 
