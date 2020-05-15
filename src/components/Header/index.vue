@@ -8,7 +8,7 @@
           <p v-if="userInfo.name">
             <span>{{userInfo.nickName}}</span>
             &nbsp;&nbsp;&nbsp;
-            <a href="javascript:">登出</a>
+            <a href="javascript:" @click="logout">登出</a>
           </p>
           <p v-else>
             <span>请</span>
@@ -17,7 +17,7 @@
           </p>
         </div>
         <div class="typeList">
-          <a href="###">我的订单</a>
+          <router-link to="/center/myorder">我的订单</router-link>
           <router-link to="/shopcart">我的购物车</router-link>
           <a href="###">我的尚品汇</a>
           <a href="###">尚品汇会员</a>
@@ -73,6 +73,11 @@ export default {
     })
   },
   methods: {
+    logout(){
+      if(window.confirm('确定退出吗?')){
+        this.$store.dispatch('logout')
+      }
+    },
     search() {
       // 字符串拼接
       // this.$router.push(`/search/${this.keyword}?keyword2=${this.keyword.toUpperCase()}`);

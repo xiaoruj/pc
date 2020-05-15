@@ -25,11 +25,6 @@
           </li>
           <li class="cart-list-con5">
             <a href="javascript:void(0)" class="mins" @click="changeItemNum(item, -1)">-</a>
-            <!-- 
-              在vue和原生DOM中, input输入框
-                input事件: 在输入发生改变时实时触发
-                change事件: 在失去焦点时才触发
-             -->
             <input autocomplete="off" type="text" class="itxt" :value="item.skuNum" 
               @change="changeItemNum(item, $event.target.value*1 - item.skuNum, $event)">
             <a href="javascript:void(0)" class="plus" @click="changeItemNum(item, 1)">+</a>
@@ -47,10 +42,6 @@
     </div>
     <div class="cart-tool">
       <div class="select-all">
-        <!-- 
-        显示: 根据cartList中是否所有item都勾选了, 来决定是true/false  ==> isAllChecked值由cartList计算确定
-        当用户主动改变的checkbox勾选状态: 发请求更新所有购物项的勾选状态为对应的值 ==> 需要监视isAllChecked的变化
-        -->
         <input class="chooseAll" type="checkbox" v-model="isAllChecked">
         <span>全选</span>
       </div>
@@ -67,7 +58,7 @@
           <i class="summoney">{{totalPrice}}</i>
         </div>
         <div class="sumbtn">
-          <a class="sum-btn" href="###" target="_blank">结算</a>
+          <a class="sum-btn" @click="$router.push('/trade')">结算</a>
         </div>
       </div>
     </div>
@@ -97,7 +88,7 @@
           // return this.cartList.find(item => item.isChecked!==1)===undefined
           // return !this.cartList.find(item => item.isChecked!==1)
           // return !this.cartList.some(item => item.isChecked===0)  // 是否有一个元素满足条件
-          return this.cartList.every(item => item.isChecked===1) && this.cartList>0 // 是否所有元素都满足条件
+          return this.cartList.every(item => item.isChecked===1) && this.cartList.length>0 // 是否所有元素都满足条件
         },
         async set (value) { 
           try {
@@ -114,13 +105,18 @@
     },
 
     methods: {
-      async changeItemNum (item, numChange) {
-         try {
-           if (item.skuNum + numChange<1) return
-          await this.$store.dispatch('addToCart3', {skuId: item.skuId, skuNum: numChange})
-          this.$store.dispatch('getCartList')
-        } catch (error) { 
-          alert(error.message)
+      async changeItemNum (item, numChange, event) {
+           if (item.skuNum + numChange<0) {
+             try{
+                await this.$store.dispatch('addToCart3', {skuId: item.skuId, skuNum: numChange})
+                this.$store.dispatch('getCartList')
+              }catch (error) { 
+                alert(error.message)
+              }
+        } else{
+          if(event){
+            event.target.value = item.skuNum
+          }
         }
       },
 

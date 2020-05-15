@@ -8,6 +8,14 @@ import Register from '@/pages/Register'
 import Login from '@/pages/Login'
 import AddCartSuccess from '@/pages/AddCartSuccess'
 import ShopCart from '@/pages/ShopCart'
+import store from '@/store'
+import router from '@/router'
+import Trade from '@/pages/Trade'
+import Pay from '@/pages/Pay'
+import PaySuccess from '@/pages/PaySuccess'
+import Center from '@/pages/Center'
+import MyOrder from '@/pages/Center/MyOrder'
+import GroupBuy from '@/pages/Center/GroupBuy'
 export default [
   {
     path: '/',
@@ -28,12 +36,74 @@ export default [
   {
     path: '/addcartsuccess',
     component: AddCartSuccess,
+    beforeEnter(to, from, next){
+      const skuNum = to.query.skuNum
+      const skuInfo = JSON.parse(window.sessionStorage.getItem('SKU_INFO_KEY'))
+      console.log('---', skuNum, skuInfo);
+      if(skuNum && skuInfo){
+        next()
+      }else{
+        next('/')
+      }
+    }
   },
   {
     path:'/shopcart',
     component: ShopCart,
   },
+  {
+    path: '/trade',
+    component: Trade,
+    beforeEnter(to, from, next){
+      if(from.path==='/shopcart'){
+        next()
+      }else{
+        next('/shopcart')
+      }
+    }
+  },
+  {
+    path: '/pay',
+    component: Pay,
+    beforeEnter(to, from, next){
+      if(from.path==='/trade'){
+        next()
+      }else{
+        next('/trade')
+      }
+    }
+  },
+  {
+    path: '/paysuccess',
+    component: PaySuccess,
+    beforeEnter(to, from, next){
+      if(from.path==='/pay'){
+        next()
+      }else{
+        next('/pay')
+      }
+    }
+  },
+  {
+    path: '/center',
+    component: Center,
+    children: [
+      {
+        // path: '/center/myorder',
+        path: 'myorder',
+        component: MyOrder,
+      },
+      {
+        path: 'groupbuy',
+        component: GroupBuy,
+      },
 
+      {
+        path: '',
+        redirect: 'myorder'
+      }
+    ]
+  },
   {
     path: '/register',
     component: Register,

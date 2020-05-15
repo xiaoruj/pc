@@ -79,11 +79,26 @@ export default {
       const{mobile, password} = this
       try{
         await this.$store.dispatch('login', {mobile,password})
-        this.$router.replace('/')
+        const redirect = this.$route.query.redirect
+        if(redirect){
+          this.$router.replace(redirect)
+        }else{
+          this.$router.replace('/')
+        }
+        
       }catch(error){
         alert(error.message)
       }
     }
+  },
+  beforeRouteEnter(to, from, next){
+    next((component) => {
+      if(!component.$store.state.user.userInfo.token){
+        next()
+      }else{
+        next('/')
+      }
+    })
   }
 }
 </script>

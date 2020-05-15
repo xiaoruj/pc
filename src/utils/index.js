@@ -13,4 +13,6 @@ export function saveUserInfo (userInfo){
 export function getUserInfo (){
     return JSON.parse(localStorage.getItem('USER_INFO_KEY')) || {}
 }
-
+export function removeUserInfo(){
+    localStorage.removeItem('USER_INFO_KEY')
+}

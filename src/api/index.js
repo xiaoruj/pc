@@ -54,4 +54,4 @@ export const reqDeleteCartItem = (skuId) => ajax.delete(`/cart/deleteCart/${skuI
 }) */
 export const reqRegister = (userInfo) => ajax.post('/user/passport/register', userInfo)
 export const reqLogout = () => ajax('/user/passport/logout')
-
+export const reqMyOrders = (page, limit) => ajax(`/order/auth/${page}/${limit}`)

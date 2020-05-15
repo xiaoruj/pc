@@ -6,44 +6,64 @@
         <span class="go">我有账号，去 <router-link to="/login">登陆</router-link>
         </span>
       </h3>
-      <div class="content">
-        <label>手机号:</label>
-        <input type="text" placeholder="请输入你的手机号" v-model="mobile">
-        <!-- <span class="error-msg">错误提示信息</span> -->
-      </div>
-      <div class="content">
-        <label>验证码:</label>
-        <input type="text" placeholder="请输入验证码" v-model="code">
-        <!-- img对应的请求跨域: 没有问题, 普通的HTTP, 而是ajax请求 -->
-        <!-- ajax跨域请求才有问题 -->
-        <!-- <img ref="code" src="http://182.92.128.115/api/user/passport/code" alt="code"> -->
+      <ValidationObserver ref="form">
+        <form>
+          <div class="content">
+            <label>手机号:</label>
+            <ValidationProvider name="手机号" :rules="{required: true, regex: /^1\d{10}$/}">
+              <template slot-scope="{errors, classes}">
+                <input type="text" placeholder="请输入你的手机号" v-model="mobile" :class="classes">
+                <span class="error-msg">{{errors[0]}}</span>
+              </template>
+            </ValidationProvider>
+          </div>
+          
+          <div class="content">
+            <label>验证码:</label>
 
-        <!-- img对应的请求没有跨域 -->
-        <!-- 浏览器发出的请求是当前前台应用, 
-            当前开发环境包含了一个代理服务器, 对以/api开头的http请求进行请求转发给后台接口处理
-        -->
-        <img ref="code" src="/api/user/passport/code" alt="code" @click="updateCode">
-        <a href="javascrpt:" @click="updateCode">换一个</a>
-        <!-- <span class="error-msg">错误提示信息</span> -->
-      </div>
-      <div class="content">
-        <label>登录密码:</label>
-        <input type="text" placeholder="请输入你的登录密码" v-model="password">
-        <!-- <span class="error-msg">错误提示信息</span> -->
-      </div>
-      <div class="content">
-        <label>确认密码:</label>
-        <input type="text" placeholder="请输入确认密码" v-model="password2">
-        <!-- <span class="error-msg">错误提示信息</span> -->
-      </div>
-      <div class="controls">
-        <input name="m1" type="checkbox" v-model="isAgree">
-        <span>同意协议并注册《尚品汇用户协议》</span>
-        <!-- <span class="error-msg">错误提示信息</span> -->
-      </div>
-      <div class="btn">
-        <button @click="register">完成注册</button>
-      </div>
+            <ValidationProvider name="验证码" :rules="{required: true, regex: /^.{4}$/}">
+              <template slot-scope="{errors, classes}">
+                <input type="text" placeholder="请输入验证码" v-model="code" :class="classes">
+                <!-- http://182.92.128.115 -->
+                <img ref="code" src="/api/user/passport/code" alt="code" @click="updateCode">
+                <span class="error-msg">{{ errors[0] }}</span>
+              </template>
+            </ValidationProvider>
+
+          </div>
+          <div class="content">
+            <label>登录密码:</label>
+            <ValidationProvider name="密码" :rules="{required: true, min: 6, max: 10}">
+              <template slot-scope="{ errors, classes }">
+                <input type="password" placeholder="请输入你的登录密码" v-model="password" :class="classes">
+                <span class="error-msg">{{ errors[0] }}</span>
+              </template>
+            </ValidationProvider>
+          </div>
+          <div class="content">
+            <label>确认密码:</label>
+            <ValidationProvider name="确认密码" :rules="{required: true, is: password}">
+              <template slot-scope="{ errors,classes}">
+                <input type="password" placeholder="请输入确认密码" v-model="password2" :class="classes">
+                <span class="error-msg">{{ errors[0] }}</span>
+              </template>
+            </ValidationProvider>
+          </div>
+          <div class="controls">
+            <ValidationProvider name="协议" :rules="{oneOf: [true]}">
+              <template slot-scope="{ errors,classes}">
+                <input name="m1" type="checkbox" v-model="isAgree" :class="classes">
+                <span>同意协议并注册《尚品汇用户协议》</span>
+                <span class="error-msg">{{errors[0]}}</span>
+              </template>
+            </ValidationProvider>
+          </div>
+
+          <div class="btn">
+            <button @click.prevent="register">完成注册</button>
+          </div>
+        </form>
+      </ValidationObserver>
     </div>
 
     <!-- 底部 -->
@@ -66,41 +86,63 @@
 </template>
 
 <script>
-export default {
-  name: 'Register',
-  data(){
-    return {
-      mobile:'',
-      code:'',
-      password:'',
-      password2:'',
-      isAgree:true,
-    }
-  },
-  methods:{
-    updateCode(event){
-      this.$refs.code.src = '/api/user/passport/code'
-    },
-    async register(){
-      const {mobile, code, password, password2, isAgree} = this
-      if(!isAgree){
-        alert('同意')
-        return
-      }else if(password ==='' || password!==password2){
-        alert('2次密码必须相同')
-        return
+  export default {
+    name: 'Register',
+
+    data() {
+      return {
+        mobile: '', // 手机号
+        password: '', // 密码
+        password2: '', // 确认密码
+        code: '', // 一次性图形验证
+        isAgree: false, // 是否同意
       }
-      try{
-        await this.$store.dispatch('register', {mobile, code, password})
-        this.$router.replace('/login')
-      }catch(error){
-        this.updateCode()
-        this.code = ''
-        alert(error.message)
+    },
+
+    methods: {
+      register() {
+
+        this.$refs.form.validate().then(async (success) => {
+          if (!success) {
+            return;
+          }
+
+          const {
+            mobile,
+            password,
+            code,
+          } = this
+
+          // 2. 发送注册的请求
+          try {
+            await this.$store.dispatch('register', {
+              mobile,
+              password,
+              code
+            })
+            // 3.1. 如果成功了, 跳转到登陆的界面
+            this.$router.replace('/login')
+            console.log('注册成功')
+          } catch (error) {
+            // 3.2. 如果失败了, 提示文本
+            alert(error.message)
+          }
+        })
+        
+      },
+
+      /* 
+      更新验证码显示: 告诉浏览器重新发请求获取验证码图片
+      */
+      updateCode() {
+        // 给img重新指定src
+        // 如果src新的值与原本的值相同, 浏览器不会自动请求获取图片显示
+        // 解决: 携带时间(当前时间值)戳的参数  ==> 每次指定的src值都不一样==> 浏览器就会自动请求
+        // this.$refs.code.src = `http://182.92.128.115/api/user/passport/code`  // 是一个http请求
+        this.$refs.code.src = `/api/user/passport/code` // 是一个http请求
       }
     }
   }
-}
 </script>
 
 <style lang="less" scoped>
@@ -154,6 +196,9 @@ export default {
           margin-left: 5px;
           outline: none;
           border: 1px solid #999;
+          &.is-invalid {
+            border: 1px solid red;
+          }
         }
 
         img {
