@@ -42,6 +42,10 @@
                 <span>x{{item.skuNum}}</span>
               </div>
             </td>
+            <!-- 
+              template是vue在编码模板过程中解析, 不会生成真实的DOM标签
+              可以利用它来包含多个一般的标签, 并对其进行统一处理, 不会增加真实DOM结构
+             -->
             <template v-if="index===0">
               <td :rowspan="order.orderDetailList.length" width="8%" class="center">{{order.consignee}}</td>
               <td :rowspan="order.orderDetailList.length" width="13%" class="center">
@@ -64,7 +68,9 @@
           </tr>
         </tbody>
       </table>
+
     </div>
+    
     <Pagination 
       :currentPage="currentPage" 
       :pageSize="pageSize" 
@@ -72,6 +78,19 @@
       :showPageNo="5"
       @currentChange="getMyOrders"
     />
+
+     <el-pagination
+      background
+      prev-text="上一页"
+      next-text="下一页"
+      layout="prev, pager, next, ->, total"
+      :total="total"
+      :page-size="pageSize"  
+      :current-page="currentPage"
+      :pager-count="7"
+      @current-change="getMyOrders"
+    >
+    </el-pagination>
   </div>
 </template>
 

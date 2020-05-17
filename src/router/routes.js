@@ -1,8 +1,9 @@
 /* 
 所有路由配置的数组
 */
-import Home from '@/pages/Home'
-import Search from '@/pages/Search'
+const Search = () => import('@/pages/Search')
+// import Home from '@/pages/Home'
+// import Search from '@/pages/Search'
 import Detail from '@/pages/Detail'
 import Register from '@/pages/Register'
 import Login from '@/pages/Login'
@@ -19,7 +20,7 @@ import GroupBuy from '@/pages/Center/GroupBuy'
 export default [
   {
     path: '/',
-    component: Home
+    component: () => import('@/pages/Home')
   },
   {
     name: 'search',  // 是当前路由的标识名称

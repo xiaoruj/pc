@@ -3,7 +3,7 @@ import user from './user'
 import search from './search'   
 import detail from './detail'
 import shopCart from './shopCart'
-
+import order from './order'
 // console.log('search', search)
 
 export default {
@@ -11,5 +11,6 @@ export default {
   user,
   search,
   detail,
-  shopCart
+  shopCart,
+  order
 }

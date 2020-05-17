@@ -82,8 +82,69 @@
 </template>
 
 <script>
+import QRCode from 'qrcode'
   export default {
     name: 'Pay',
+    props: ['orderId'],
+
+    computed: {
+      payInfo () {
+        return this.$store.state.order.payInfo
+      }
+    },
+    mounted () {
+      this.$store.dispatch('getPayInfo', this.orderId)
+    },
+    methods: {
+      pay () {
+        console.dir(this.$msgbox)
+        QRCode.toDataURL(this.payInfo.codeUrl)
+          .then(url => { 
+            console.log(url)
+            this.$alert(`<img src="${url}">`, '请使用微信扫码支付', {
+              dangerouslyUseHTMLString: true, 
+              center: true, 
+              showClose: false, 
+              showCancelButton: true, 
+              cancelButtonText: '支付中遇到了问题',
+              confirmButtonText: '我已成功支付'
+            })
+              .then(() => { 
+                clearInterval(this.intervalId)
+                this.$router.push('/paysuccess')
+              }).catch(() => { 
+                clearInterval(this.intervalId)
+                this.$message({
+                  message: '找前台',
+                  type: 'warning'
+                })
+              })
+            this.intervalId = setInterval(() => {
+            this.$API.reqOrderStatus(this.orderId)
+              .then(result => {
+                console.log('result', result)
+                if (result.code===200) {
+                  this.$msgbox.close()
+                  this.$router.push('/paysuccess')
+                  clearInterval(this.intervalId)
+                  this.$message.success('支付成功')
+                  this.$store.dispatch('deleteCheckedCartItems')
+                }
+              })
+              .catch(error => {
+                clearInterval(this.intervalId)
+                this.$message({
+                  message: '获取订单状态失败!',
+                  type: 'error'
+                })
+              })
+            }, 3000)
+          })
+          .catch(err => {
+            alert('生成支付二维码失败!')
+          })
+      }
+    }
   }
 </script>
 
