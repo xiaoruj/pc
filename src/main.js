@@ -10,6 +10,7 @@ import './mock/mockServer'
 import 'swiper/css/swiper.min.css'
 import './validate'
 import * as API from '@/api'
+import './elements'
 Vue.prototype.$API = API
 Vue.config.productionTip = false // 去掉不是生产环境的提示
 Vue.component('TypeNav', TypeNav)

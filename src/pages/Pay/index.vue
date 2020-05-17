@@ -7,7 +7,7 @@
           <span class="success-info">订单提交成功，请您及时付款，以便尽快为您发货~~</span>
         </h4>
         <div class="paymark">
-          <span class="fl">请您在提交订单<em class="orange time">4小时</em>之内完成支付，超时订单会自动取消。订单号：<em>145687</em></span>
+          <span class="fl">请您在提交订单<em class="orange time">4小时</em>之内完成支付，超时订单会自动取消。订单号：<em>{{orderId}}</em></span>
           <span class="fr"><em class="lead">应付金额：</em><em class="orange money">￥17,654</em></span>
         </div>
       </div>
@@ -65,7 +65,7 @@
         <div class="hr"></div>
 
         <div class="submit">
-          <router-link class="btn" to="/paysuccess">立即支付</router-link>
+          <a href="javascript:" class="btn" @click="pay">立即支付</a>
         </div>
         <div class="otherpay">
           <div class="step-tit">
@@ -82,8 +82,68 @@
 </template>
 
 <script>
+  import QRCode from 'qrcode'
   export default {
     name: 'Pay',
+    props:['orderId'],
+    computed:{
+      payInfo (){
+        return this.$store.state.order.payInfo
+      }
+    },
+    mounted(){
+      this.$store.dispatch('getPayInfo', this.orderId)
+    },
+    methods:{
+      pay(){
+        QRCode.toDataURL(this.payInfo.codeUrl)
+        .then(url => {
+          console.log(url);
+          this.alert(`<img src="${url}">`, '请使用微信扫码支付', {
+            dangerouslyUseHTMLString: true, 
+            center: true, 
+            showClose: false, 
+            showCancelButton: true, 
+            cancelButtonText: '支付中遇到了问题',
+            confirmButtonText: '我已成功支付'
+          })
+          .then(() => {
+            clearInterval(this.intervalId)
+            this.$router.push('./paysuccess')
+          }).catch(() => {
+            clearInterval(this.intervalId)
+            this.$message({
+              $message: '找前台',
+              type: 'warning'
+            })
+          })
+          this.intervalId = setInterval(() => {
+            this.$API.reqOrderStatus(this.orderId)
+            .then(result => {
+              console.log('result', result)
+              if(result.code===200){
+                this.$msgbox.close()
+                this.$router.pus('./paysucess')
+                clearInterval(this.intervalId)
+                this.$message.success('支付成功')
+                this.$store.dispatch('deleteCheckedCartItems')
+              }
+              
+            })
+            .catch(error => {
+              clearInterval(this.intervalId)
+              this.$message({
+                $message: '获取订单状态失败',
+                type: 'error'
+              })
+            })
+          }, 3000)
+        })
+        .catch(err => {
+          alert('生成支付二维码失败')
+        })
+      }
+    }
   }
 </script>
 
